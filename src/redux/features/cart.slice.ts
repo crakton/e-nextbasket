@@ -1,38 +1,66 @@
-import { IProduct } from "@/interfaces";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+// cartSlice.ts
 
-const cart = createSlice({
-  name: "CART",
-  initialState: [] as IProduct[],
+import { IProduct } from "@/interfaces";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+export interface CartState {
+  items: {
+    brand: string;
+    category: string;
+    description: string;
+    discountPercentage: number;
+    id: string | number;
+    images: string[];
+    price: number;
+    rating: number;
+    stock: number;
+    thumbnail: string;
+    title: string;
+    quantity: number;
+  }[];
+}
+
+const initialState: CartState = {
+  items: [],
+};
+
+const cartSlice = createSlice({
+  name: "cart",
+  initialState,
   reducers: {
-    removeFromCart(state, action: PayloadAction<string>) {
-      // perform removing product and update the cart
-      state = state.filter((item) => item.id !== action.payload);
-    },
-    toggleCartItem(state, action: PayloadAction<IProduct>) {
-      const existingIndex = state.findIndex(
+    addToCart: (state, action: PayloadAction<IProduct>) => {
+      const existingItem = state.items.find(
         (item) => item.id === action.payload.id
       );
 
-      if (existingIndex !== -1) {
-        // Product already exists in the cart, so remove it
-        state.splice(existingIndex, 1);
+      if (existingItem) {
+        state.items = state.items.filter((item) => item.id !== existingItem.id);
       } else {
-        // Product doesn't exist in the cart, so add it
-        state.push(action.payload);
+        state.items.push({ ...action.payload, quantity: 1 });
       }
-
-      // Ensure uniqueness by converting the array to a Set and back to an array
-      const uniqueCartItems = Array.from(
-        new Set(state.map((item) => item.id))
-      ).map((id) => {
-        return state.find((item) => item.id === id) as IProduct;
-      });
-
-      state = uniqueCartItems;
+    },
+    removeFromCart: (state, action: PayloadAction<string | number>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload);
+    },
+    incrementQuantity: (state, action: PayloadAction<string | number>) => {
+      const item = state.items.find((item) => item.id === action.payload);
+      if (item) {
+        item.quantity += 1;
+      }
+    },
+    decrementQuantity: (state, action: PayloadAction<string | number>) => {
+      const item = state.items.find((item) => item.id === action.payload);
+      if (item && item.quantity > 1) {
+        item.quantity -= 1;
+      }
     },
   },
 });
 
-export const { removeFromCart, toggleCartItem } = cart.actions;
-export default cart.reducer;
+export const {
+  addToCart,
+  removeFromCart,
+  incrementQuantity,
+  decrementQuantity,
+} = cartSlice.actions;
+
+export default cartSlice.reducer;

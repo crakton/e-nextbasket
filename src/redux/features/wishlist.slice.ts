@@ -1,38 +1,42 @@
+// wishlistSlice.ts
+
 import { IProduct } from "@/interfaces";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+interface WishlistState {
+  items: IProduct[];
+}
 
-const wishlist = createSlice({
-  name: "WISHLIST",
-  initialState: [] as IProduct[],
+const initialState: WishlistState = {
+  items: [],
+};
+
+const wishlistSlice = createSlice({
+  name: "wishlist",
+  initialState, // Add this line to provide an initial state
   reducers: {
-    removeFromWishlist(state, action: PayloadAction<string>) {
-      // perform removing product and update the state
-      state = state.filter((item) => item.id !== action.payload);
-    },
-    toggleWishlistItem(state, action: PayloadAction<IProduct>) {
-      const existingIndex = state.findIndex(
-        (item) => item.id === action.payload.id
-      );
-
-      if (existingIndex !== -1) {
-        // Product already exists in the wishlist, so remove it
-        state.splice(existingIndex, 1);
+    toggleProduct: (state, action: PayloadAction<IProduct>) => {
+      if (state && state.items.length === 0) {
+        // Check if `state` is truthy before accessing items
+        // Wishlist is empty, add the product directly
+        state.items.push(action.payload);
       } else {
-        // Product doesn't exist in the wishlist, so add it
-        state.push(action.payload);
+        // Wishlist is not empty, perform toggle operation
+        const index = state.items.findIndex(
+          (item) => item.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.items.splice(index, 1);
+        } else {
+          state.items.push(action.payload);
+        }
       }
-
-      // Ensure uniqueness by converting the array to a Set and back to an array
-      const uniqueWishlist = Array.from(
-        new Set(state.map((item) => item.id))
-      ).map((id) => {
-        return state.find((item) => item.id === id) as IProduct;
-      });
-
-      state = uniqueWishlist;
+    },
+    removeFromWishlist: (state, action: PayloadAction<string | number>) => {
+      state.items = state.items.filter((item) => item.id !== action.payload);
     },
   },
 });
 
-export const { removeFromWishlist, toggleWishlistItem } = wishlist.actions;
-export default wishlist.reducer;
+export const { toggleProduct, removeFromWishlist } = wishlistSlice.actions;
+
+export default wishlistSlice.reducer;
