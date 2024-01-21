@@ -1,7 +1,6 @@
+"use client";
 import * as React from "react";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import Image from "next/image";
+import { Container } from "@mui/material";
 
 function srcset(image: string, size: number, rows = 2, cols = 2) {
   return {
@@ -14,38 +13,55 @@ function srcset(image: string, size: number, rows = 2, cols = 2) {
 
 export function Hero() {
   return (
-    <>
-      <Image
-        alt="Con"
-        src={"/_images/container.png"}
-        height={1200}
-        width={1200}
-        className={"w-full hidden lg:block"}
-      />
-      <Image
-        alt="Con"
-        src={"/_images/container.png"}
-        height={1200}
-        width={1200}
-        className={"w-full lg:hidden"}
-      />
-    </>
+    <Container className="py-10 h-full">
+      <div className="h-fit grid grid-cols-5 gap-3">
+        <div className="col-span-full md:col-span-2">
+          <div className="w-full h-[50vh] md:h-full bg-[url(/_images/product_0.jpeg)] bg-bottom bg-cover p-3">
+            <h4 className="text-future capitalize font-semibold">5 items</h4>
+            <h1 className="uppercase text-misty text-2xl font-bold">
+              Furniture
+            </h1>
+            <button className="text-misty text-sm font-bold">Learn More</button>
+          </div>
+        </div>
+        <div className="col-span-full h-fit md:col-span-3">
+          <div className="w-full h-[50vh] mb-3 bg-[url(/_images/product_1.jpeg)] bg-[100%_50%] bg-cover p-3">
+            <h4 className="text-future capitalize font-semibold">5 items</h4>
+            <h1 className="uppercase text-misty text-2xl font-bold">
+              Furniture
+            </h1>
+            <button className="text-misty text-sm font-bold">Learn More</button>
+          </div>
+          <div className="grid grid-cols-2 gap-3 w-full h-[50vh] lg:h-[45vh]">
+            <div className="col-span-full md:col-span-1">
+              <div className="w-full h-full  bg-[url(/_images/product_2.jpeg)] bg-bottom bg-cover p-3">
+                <h4 className="text-future capitalize font-semibold">
+                  5 items
+                </h4>
+                <h1 className="uppercase text-misty text-2xl font-bold">
+                  Furniture
+                </h1>
+                <button className="text-misty text-sm font-bold">
+                  Learn More
+                </button>
+              </div>
+            </div>
+            <div className="col-span-full md:col-span-1">
+              <div className="w-full h-full  bg-[url(/_images/product_3.jpeg)] bg-bottom bg-cover p-3">
+                <h4 className="text-future capitalize font-semibold">
+                  5 items
+                </h4>
+                <h1 className="uppercase text-misty text-2xl font-bold">
+                  Furniture
+                </h1>
+                <button className="text-misty text-sm font-bold">
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Container>
   );
 }
-
-const itemData = [
-  {
-    img: "/_images/product_0.jpeg",
-    title: "Breakfast",
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: "/_images/product_0.jpeg",
-    title: "Burger",
-  },
-  {
-    img: "/_images/product_0.jpeg",
-    title: "Camera",
-  },
-];
